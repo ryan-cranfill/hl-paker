@@ -11,3 +11,8 @@ Look at available presets with `python cli.py --show-presets`
 ```
 python cli.py --preset <preset>
 ```
+
+## Building
+```
+pyinstaller gui.py --onefile --noconsole
+```

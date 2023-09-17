@@ -37,7 +37,7 @@ layout = [
     [sg.Checkbox('Verbose', key='verbose')],
     [sg.Text('Output Path', tooltip='Enter the output path for the PAK files'), sg.Input(key='out_path', default_text='xash')],
     [sg.Button('Show Presets'), sg.Button('Start')],
-    [sg.Output(size=(400, 20), key='output', echo_stdout_stderr=True, font='Courier 10', text_color='white', background_color='black', pad=(0, 0), tooltip='Output from the program will be displayed here.', expand_y=True, expand_x=True)],
+    [sg.Multiline(size=(400, 20), key='output', font='Courier 10', text_color='white', background_color='black', pad=(0, 0), tooltip='Output from the program will be displayed here.', expand_y=True, expand_x=True)],
 ]
 
 window = sg.Window('Half-Life PAK Creator', layout, size=(800, 800))
@@ -46,6 +46,14 @@ while True:
     event, values = window.read()
     output = window['output']
 
+    def print_fcn(text):
+        output.print(text)
+        window.refresh()
+
+    def error_fcn(text):
+        output.print(text, text_color='red')
+        window.refresh()    
+    
     if event == sg.WINDOW_CLOSED:
         break
     
@@ -63,10 +71,23 @@ while True:
 
     elif event == 'Start':
         # Here you would call the function to create the pak files, passing in the values from the form
-        print('Starting...')
+        print_fcn('Starting...')
         base_path = Path(values['hl_base_path'])
         game_path = base_path / values['game_path']
-        also_include = [base_path / new_folder for new_folder in tuple_string_to_list(values['also_include'])] if values['also_include'] else None
+        also_include = [base_path / new_folder for new_folder in tuple_string_to_list(values['also_include'])] if values['also_include'] else []
+        
+        # Check the paths to make sure they exist
+        if not base_path.exists():
+            error_fcn(f'Error: Base path {base_path} does not exist.')
+            continue
+        if not game_path.exists():
+            error_fcn(f'Error: Game path {game_path} does not exist.')
+            continue
+        for path in also_include:
+            if not path.exists():
+                error_fcn(f'Error: Also include path {path} does not exist.')
+                continue
+            
         out_path = base_path / values['out_path'] / values['game_path']
         ignore_files = [v for v in tuple_string_to_list(values['ignore_files'])] if values['ignore_files'] else None
         verbose = values['verbose']
@@ -75,8 +96,8 @@ while True:
         # print(values['also_include'], type(values['also_include']), tuple_string_to_list(values['also_include']))
         # print(ignore_files)
         # print(also_include)
-        make_hl_pak(game_path, out_path, also_include_overwrites=also_include, max_chunk_size=max_chunk_size, verbose=verbose, ignore_files=ignore_files, use_tqdm=False)
+        make_hl_pak(game_path, out_path, also_include_overwrites=also_include, max_chunk_size=max_chunk_size, verbose=verbose, ignore_files=ignore_files, use_tqdm=False, print_fcn=print_fcn)
         
-        print(f'Done. Place the contents of the output folder ({out_path}) in /sdcard/xash/')
+        print_fcn(f'Done. Place the contents of the output folder ({out_path}) in /sdcard/xash/')
 
 window.close()

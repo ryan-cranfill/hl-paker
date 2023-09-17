@@ -42,13 +42,13 @@ presets = {
         'commandline': 'xash3d -log --supersampling 1.25 --msaa 2 --cpu 4 --gpu 4 -game HL_Gold_HD',
         'description': 'Half-Life with the Half-Life Gold HD pack. NOTE: Do this after you have installed hl_vanilla or hl_hd, as this pack does not include all of the base Half-Life files.',
     },
-    'hl_ai_upscale': {  # Ugh, for some reason this doesn't work right now
-        'base_folder': 'valve',
-        'also_include_overwrites': ['valve_hd', 'STEP 4/valve', 'STEP 5/valve'],  # Extract the AI upscaled textures to STEP 4 and STEP 5 folders in the HL directory
-        'commandline': 'xash3d -log --supersampling 1.25 --msaa 2 --cpu 4 --gpu 4',
-        'ignore_files': ['gameinfo.txt', 'config.cfg'],
-        'description': 'Half-Life with the AI upscaled textures. NOTE: Before running this, you must copy the STEP 4 and STEP 5 folders from the AI upscale zip to "STEP 4" and "STEP 5" in the HL directory.',
-    },
+    # 'hl_ai_upscale': {  # Ugh, for some reason this doesn't work right now
+    #     'base_folder': 'valve',
+    #     'also_include_overwrites': ['valve_hd', 'STEP 4/valve', 'STEP 5/valve'],  # Extract the AI upscaled textures to STEP 4 and STEP 5 folders in the HL directory
+    #     'commandline': 'xash3d -log --supersampling 1.25 --msaa 2 --cpu 4 --gpu 4',
+    #     'ignore_files': ['gameinfo.txt', 'config.cfg'],
+    #     'description': 'Half-Life with the AI upscaled textures. NOTE: Before running this, you must copy the STEP 4 and STEP 5 folders from the AI upscale zip to "STEP 4" and "STEP 5" in the HL directory.',
+    # },
     'blueshift_vanilla': {
         'base_folder': 'bshift',
         'also_include_overwrites': None,
