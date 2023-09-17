@@ -14,5 +14,5 @@ python cli.py --preset <preset>
 
 ## Building
 ```
-pyinstaller gui.py --onefile --noconsole
+python -m PyInstaller gui.py --onefile --noconsole
 ```
