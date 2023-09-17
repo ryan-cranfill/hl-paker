@@ -53,7 +53,7 @@ def dir_to_pak(rootdir, pakfilename):
     pakfile.close()
 
 
-def make_hl_pak(in_path: Path, out_path: Path, also_include_overwrites: list=None, ignore_files: list=None, print_fcn: callable=print, verbose: bool=False, max_chunk_size: int=MAX_FILES_PER_PAK):
+def make_hl_pak(in_path: Path, out_path: Path, also_include_overwrites: list=None, ignore_files: list=None, print_fcn: callable=print, verbose: bool=False, max_chunk_size: int=MAX_FILES_PER_PAK, use_tqdm: bool=True):
     # First, make the output directory if it doesn't exist
     out_path = Path(out_path)
     # Delete the output directory if it already exists
@@ -67,7 +67,12 @@ def make_hl_pak(in_path: Path, out_path: Path, also_include_overwrites: list=Non
     # Copy all of the base HL files to the output directory, preserving directory structure
     print_fcn(f'Copying files from {in_path} to output directory...')
 
-    for file in tqdm(base_files):
+    if use_tqdm:
+        file_iter = tqdm(base_files)
+    else:
+        file_iter = base_files
+
+    for file in file_iter:
         if file.is_file():
             # Check if this file should be ignored
             if ignore_files and file.name in ignore_files:
@@ -93,7 +98,12 @@ def make_hl_pak(in_path: Path, out_path: Path, also_include_overwrites: list=Non
                 continue
             print_fcn(f'Copying files from {new_dir} to output directory...')
             files = list(Path(new_dir).rglob("*"))
-            for file in tqdm(files):
+
+            if use_tqdm:
+                file_iter = tqdm(files)
+            else:
+                file_iter = files
+            for file in file_iter:
                 if file.is_file():
                     # Check if this file should be ignored
                     if ignore_files and file.name in ignore_files:
@@ -123,7 +133,8 @@ def make_hl_pak(in_path: Path, out_path: Path, also_include_overwrites: list=Non
     pak_files_source_dir.mkdir(parents=True, exist_ok=True)
 
     # Iterate through the files and move them into pak files if appropriate
-    for file in tqdm(final_files, desc='Staging files for pak_files'):
+    file_iter = tqdm(final_files, desc='Staging files for pak_files') if use_tqdm else final_files
+    for file in file_iter:
         if file.is_dir():
             # This is a directory, don't try to copy it
             continue

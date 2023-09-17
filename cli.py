@@ -1,4 +1,3 @@
-# import os
 from pathlib import Path
 from pak_util import make_hl_pak
 from argparse import ArgumentParser

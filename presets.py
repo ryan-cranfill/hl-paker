@@ -5,21 +5,24 @@ BASE_DIRS_TO_TRY = [
     'C:\Program Files (x86)\Steam\steamapps\common\Half-Life',
     'C:\Program Files\Steam\steamapps\common\Half-Life',
     'C:\Sierra\Half-Life',
+    '~/Library/Application Support/Steam/steamapps/common/Half-Life',  # Mac
 ]
 
 
-def search_for_halflife(additional_dirs=None):
+def search_for_halflife(additional_dirs=None) -> Path:
     # Try to find the half-life directory
     for dir in BASE_DIRS_TO_TRY:
-        if Path(dir).exists():
-            return dir
+        p = Path(dir).expanduser()
+        if p.exists():
+            return p
         
     # If we didn't find it, try the additional directories if they were specified
     if additional_dirs:
         for dir in additional_dirs:
-            if Path(dir).exists():
-                return dir
-    return None
+            p = Path(dir).expanduser()
+        if p.exists():
+            return p
+    return 'Unable to find Half-Life directory.'
 
 
 presets = {
@@ -39,13 +42,13 @@ presets = {
         'commandline': 'xash3d -log --supersampling 1.25 --msaa 2 --cpu 4 --gpu 4 -game HL_Gold_HD',
         'description': 'Half-Life with the Half-Life Gold HD pack. NOTE: Do this after you have installed hl_vanilla or hl_hd, as this pack does not include all of the base Half-Life files.',
     },
-    # 'hl_ai_upscale': {  # Ugh, for some reason this doesn't work right now
-    #     'base_folder': 'valve',
-    #     'also_include_overwrites': ['valve_hd', 'STEP 4\\valve', 'STEP 5\\valve'],  # Extract the AI upscaled textures to STEP 4 and STEP 5 folders in the HL directory
-    #     'commandline': 'xash3d -log --supersampling 1.25 --msaa 2 --cpu 4 --gpu 4',
-    #     'ignore_files': ['gameinfo.txt', 'config.cfg'],
-    #     'description': 'Half-Life with the AI upscaled textures. NOTE: Before running this, you must copy the STEP 4 and STEP 5 folders from the AI upscale zip to "STEP 4" and "STEP 5" in the HL directory.',
-    # },
+    'hl_ai_upscale': {  # Ugh, for some reason this doesn't work right now
+        'base_folder': 'valve',
+        'also_include_overwrites': ['valve_hd', 'STEP 4/valve', 'STEP 5/valve'],  # Extract the AI upscaled textures to STEP 4 and STEP 5 folders in the HL directory
+        'commandline': 'xash3d -log --supersampling 1.25 --msaa 2 --cpu 4 --gpu 4',
+        'ignore_files': ['gameinfo.txt', 'config.cfg'],
+        'description': 'Half-Life with the AI upscaled textures. NOTE: Before running this, you must copy the STEP 4 and STEP 5 folders from the AI upscale zip to "STEP 4" and "STEP 5" in the HL directory.',
+    },
     'blueshift_vanilla': {
         'base_folder': 'bshift',
         'also_include_overwrites': None,
@@ -73,7 +76,7 @@ presets = {
     },
     'opfor_hd': {
         'base_folder': 'gearbox',
-        'also_include_overwrites': ['\\gearbox_hd'],
+        'also_include_overwrites': ['gearbox_hd'],
         'commandline': 'xash3d -log --supersampling 1.25 --msaa 2 --cpu 4 --gpu 4 -game gearbox',
         'description': 'Half-Life: Opposing Force with the default HD texture pack.',
     },
