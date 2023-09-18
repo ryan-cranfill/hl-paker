@@ -7,6 +7,9 @@ Make .pak files for Half-Life 1
 Before running, use `pip install -r requirements.txt`
 
 ## Usage
+`python gui.py`
+
+### CLI version
 Look at available presets with `python cli.py --show-presets`
 ```
 python cli.py --preset <preset>

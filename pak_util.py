@@ -179,6 +179,7 @@ def make_hl_pak(in_path: Path, out_path: Path, also_include_overwrites: list=Non
                     # This is a directory, don't try to copy it
                     continue
                 relpath: Path = file.relative_to(out_path)
+                relpath: Path = file.relative_to(out_path)
                 # Create necessary subdirectories in dst
                 new_dst = new_pak_files_dir / relpath.parent
                 new_dst.mkdir(parents=True, exist_ok=True)
@@ -189,7 +190,7 @@ def make_hl_pak(in_path: Path, out_path: Path, also_include_overwrites: list=Non
             pak_name = f'pak{pak_num}.pak'  # e.g. pak0.pak, pak1.pak, etc.
             pak_path = out_path / pak_name
             print_fcn(f'Creating pak file: {pak_name}')
-            dir_to_pak(str(new_pak_files_dir), pak_path)
+            dir_to_pak(str(new_pak_files_dir / 'pak_files'), pak_path)
             # Delete the pak_files dir
             shutil.rmtree(new_pak_files_dir)
             pak_num += 1
