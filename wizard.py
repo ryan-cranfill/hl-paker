@@ -1,4 +1,3 @@
-# import PySimpleGUI as sg
 from pathlib import Path
 from ppadb.device import Device
 from pak_util import make_hl_pak
@@ -72,6 +71,8 @@ def pack_and_copy_preset(quest_devices: list[Device], base_path: Path, preset: s
             exit(1)
         
         # Push the output folder to the device(s)
+        # Make sure xash folder exists
+        make_xash_folder(quest_devices)
         remote_folder = Path('/sdcard/xash') / preset['base_folder']
         print(f'Pushing {out_path} to device(s) at {remote_folder}')
         for device in quest_devices:
