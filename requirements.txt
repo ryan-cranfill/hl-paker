@@ -1,3 +1,5 @@
 pysimplegui
 tqdm
 pyinstaller
+pure-python-adb
+requests

@@ -8,6 +8,31 @@ BASE_DIRS_TO_TRY = [
     '~/Library/Application Support/Steam/steamapps/common/Half-Life',  # Mac
 ]
 
+# Add D-Z to the list of directories to try if you have it installed
+# Iterate through alphabet
+for letter in range(ord('D'), ord('Z') + 1):
+    BASE_DIRS_TO_TRY.append(f'{chr(letter)}:\Program Files (x86)\Steam\steamapps\common\Half-Life')
+    BASE_DIRS_TO_TRY.append(f'{chr(letter)}:\Program Files\Steam\steamapps\common\Half-Life')
+    BASE_DIRS_TO_TRY.append(f'{chr(letter)}:\Sierra\Half-Life')
+
+LAMBDA1_APK_URL_QUEST = 'https://github.com/DrBeef/Lambda1VR/releases/download/v1.5.1/lambda1vr-v1.5.1.apk'
+LAUNCHER_APK_URL_QUEST = 'https://github.com/berndolauerto/Lambda1VR_Launcher/releases/download/2.1/Lambda1_Launcher_Quest.apk'
+
+APK_CONFIGS = {
+    'quest': {
+        'lambda1': {
+            'apk_url': LAMBDA1_APK_URL_QUEST,
+            'name': 'com.drbeef.lambda1vr',
+        },
+        'launcher': {
+            'apk_url': LAUNCHER_APK_URL_QUEST,
+            'name': 'com.CactusStudios.Lambda1VR_Launcher',
+        }
+    },
+}
+
+HL_GOLD_HD_URL = 'https://github.com/ryan-cranfill/hl-paker/releases/download/0.1.1/hl_gold_hd.zip'
+
 
 def search_for_halflife(additional_dirs=None) -> Path:
     # Try to find the half-life directory
