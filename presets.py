@@ -1,5 +1,9 @@
 from pathlib import Path
 
+THIS_FILE = Path(__file__).resolve()
+ROOT_DIR = THIS_FILE.parent
+ADB_ZIP = ROOT_DIR / 'platform-tools.zip'
+
 
 BASE_DIRS_TO_TRY = [
     'C:\Program Files (x86)\Steam\steamapps\common\Half-Life',

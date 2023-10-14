@@ -163,3 +163,4 @@ cython_debug/
 *.spec
 dist/
 build/
+old/

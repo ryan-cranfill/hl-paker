@@ -1,14 +1,17 @@
+import os
 import zipfile
 import requests
-import urllib.request
+import subprocess
 from tqdm import tqdm
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from ppadb.client import Client as AdbClient
 from ppadb.device import Device
 
-from presets import APK_CONFIGS, HL_GOLD_HD_URL
+from presets import APK_CONFIGS, HL_GOLD_HD_URL, ADB_ZIP
 
+
+IS_WINDOWS = os.name == 'nt'
 
 def find_quest_devices():
     client = AdbClient()
@@ -24,27 +27,24 @@ def find_quest_devices():
     return quest_devices
 
 
-def reporthook(t):
-    """
-    :param t: tqdm instance
-    :return: updated tqdm instance
-    """
-    last_b = [0]
+def get_adb_exe() -> (Path, Path):
+    # Unzip the adb zip to a temporary directory and return the path to the adb executable and the temporary directory
+    temp_dir = TemporaryDirectory()
+    temp_dir_path = Path(temp_dir.name)
+    print('Extracting ADB zip to', temp_dir_path)
+    with zipfile.ZipFile(ADB_ZIP, 'r') as zip_ref:
+        zip_ref.extractall(temp_dir_path)
 
-    def inner(b=1, bsize=1, tsize=None):
-        """
-        :param b: int option
-        :param bsize: int option
-        :param tsize: int option
-        :return: updated tqdm instance
-        """
-        if tsize is not None:
-            t.total = tsize
-        t.update((b - last_b[0]) * bsize)
-        last_b[0] = b
-        return t
+    # Get the path to the adb executable
+    adb_exe = temp_dir_path / 'platform-tools' / 'adb.exe'
+    print('ADB executable:', adb_exe)
+    return adb_exe, temp_dir
 
-    return inner
+def delete_temp_dir(temp_dir: TemporaryDirectory):
+    # Delete the temporary directory
+    print('Deleting temporary directory', temp_dir.name)
+    temp_dir.cleanup()
+    print('Deleted temporary directory.')
 
 def download_with_progress(url, dest_path):
     # with tqdm(unit='B', unit_scale=True, unit_divisor=1024, miniters=1, desc=dest_path) as t:
@@ -70,7 +70,10 @@ def install_apk(apk_url, device: Device):
         print('\nDownloaded APK.')
         # Install the APK
         print('Installing APK...')
-        device.install(apk_path, reinstall=True)
+        adb_exe, temp_dir = get_adb_exe()
+        subprocess.run([str(adb_exe), '-s', device.serial, 'install', '-r', str(apk_path)])
+        # device.install(apk_path, reinstall=True)
+        delete_temp_dir(temp_dir)
         print('Installed APK.')
 
 def make_folder(device: Device, folder: Path):
@@ -89,12 +92,22 @@ def push_folder(device: Device, local_folder: str, remote_folder: Path):
         # Make it start with /sdcard/
         remote_folder = Path('/sdcard') / remote_folder
     
-    # Make sure the local folder ends with a / so that it copies the contents of the folder instead of the folder itself
-    if not str(local_folder).endswith('/'):
-        local_folder = str(local_folder) + '/'
+    if IS_WINDOWS:
+        # Have to use subprocess because the ppadb push function doesn't work on Windows
+        # Replace \ with / in the remote folder
+        remote_folder = str(remote_folder).replace('\\', '/')
+        print('remote_folder:', remote_folder)
+        print('Current directory:', os.getcwd())
+        adb_exe, temp_dir = get_adb_exe()
+        subprocess.run([str(adb_exe), '-s', device.serial, 'push', str(local_folder), str(remote_folder)])
+        delete_temp_dir(temp_dir)
+    else:
+         # # Make sure the local folder ends with a / so that it copies the contents of the folder instead of the folder itself
+        if not str(local_folder).endswith('/'):
+            local_folder = str(local_folder) + '/'
+        # Push the folder to the device's sdcard
+        device.push(local_folder, str(remote_folder))
 
-    # Push the folder to the device's sdcard
-    device.push(local_folder, str(remote_folder))
     print(f'Pushed {local_folder} to {remote_folder} on device.')
 
 def copy_all_files(device: Device, src: Path, dest: Path):
@@ -106,6 +119,7 @@ def copy_all_files(device: Device, src: Path, dest: Path):
     
     # Loop through the files in src
     for file in src.rglob('*'):
+        print('pushing:', file)
         # Get the relative path of the file
         relative_path = file.relative_to(src)
         

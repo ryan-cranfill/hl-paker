@@ -47,12 +47,12 @@ def main():
                     continue
 
                 # Show a please wait screen
-                sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
+                # sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
 
                 install_lambda_and_launcher(quest_devices, force_install=True)
 
                 # Delete the please wait screen
-                sg.popup_animated(None)
+                # sg.popup_animated(None)
                 sg.popup('Lambda and Launcher installed successfully.')
 
         if event == 'Pack and Copy Base Half-Life':
@@ -64,11 +64,11 @@ def main():
                     sg.popup(f'Error: Half-Life cannot be found, please ensure it is installed.')
                     continue
                 # Show a please wait screen
-                sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
+                # sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
                 # Pack and copy the base Half-Life
                 pack_and_copy_preset(quest_devices, base_path=base_path, preset='hl_hd')
                 # Delete the please wait screen
-                sg.popup_animated(None)
+                # sg.popup_animated(None)
 
                 sg.popup('Base Half-Life packed and copied successfully.')
 
@@ -79,11 +79,11 @@ def main():
                 base_path = Path(search_for_halflife())
                 zip_file = look_for_hl_gold_zip_in_downloads()
                 # Show a please wait screen
-                sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
+                # sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
                 download_and_install_hl_gold(base_path, zip_file, force_install=True)
 
                 # Delete the please wait screen
-                sg.popup_animated(None)
+                # sg.popup_animated(None)
                 sg.popup('HL Gold downloaded and installed successfully.')
 
         if event == 'Pack and Copy HL Gold HD':
@@ -95,10 +95,10 @@ def main():
                     sg.popup('HL Gold HD not found.')
                 else:
                     # Show a please wait screen
-                    sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)    
+                    # sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)    
                     pack_and_copy_hl_gold(quest_devices, base_path=base_path)
                     # Delete the please wait screen
-                    sg.popup_animated(None)
+                    # sg.popup_animated(None)
                     sg.popup('HL Gold packed and copied successfully.')
 
         if event == 'Pack and Copy Blueshift':
@@ -108,10 +108,10 @@ def main():
                 base_path = Path(search_for_halflife())
                 if base_path / 'bshift':
                     # Show a please wait screen
-                    sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
+                    # sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
                     pack_and_copy_preset(quest_devices, base_path=base_path, preset='blueshift_hd')
                     # Delete the please wait screen
-                    sg.popup_animated(None)
+                    # sg.popup_animated(None)
                     sg.popup('Blueshift copied successfully.')
                 else:
                     sg.popup('Blueshift not found.')
@@ -123,7 +123,7 @@ def main():
                 base_path = Path(search_for_halflife())
                 if base_path / 'gearbox':
                     # Show a please wait screen
-                    sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
+                    # sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
                     pack_and_copy_preset(quest_devices, base_path=base_path, preset='opfor_hd')
                     # Delete the please wait screen
                     sg.popup('Opposing Force copied successfully.')

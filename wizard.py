@@ -49,8 +49,8 @@ def pack_and_copy_hl_gold(quest_devices: list[Device], base_path: Path):
     remote_folder = Path('/sdcard/xash') / 'HL_Gold_HD'
     print(f'Pushing {out_path} to device(s) at {remote_folder}')
     for device in quest_devices:
-        # push_folder(device, out_path, remote_folder)
-        copy_all_files(device, out_path, remote_folder)
+        push_folder(device, out_path, remote_folder)
+        # copy_all_files(device, out_path, remote_folder)
 
 def pack_and_copy_preset(quest_devices: list[Device], base_path: Path, preset: str = 'hl_hd'):
     # Do the preset, then copy the output to the device(s)
@@ -77,8 +77,8 @@ def pack_and_copy_preset(quest_devices: list[Device], base_path: Path, preset: s
         remote_folder = Path('/sdcard/xash') / preset['base_folder']
         print(f'Pushing {out_path} to device(s) at {remote_folder}')
         for device in quest_devices:
-            # push_folder(device, out_path, remote_folder)
-            copy_all_files(device, out_path, remote_folder)
+            push_folder(device, out_path, remote_folder)
+            # copy_all_files(device, out_path, remote_folder)
 
 
 def look_for_hl_gold_zip_in_downloads():
