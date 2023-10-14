@@ -3,7 +3,7 @@ from ppadb.device import Device
 from pak_util import make_hl_pak
 
 from presets import presets, search_for_halflife, APK_CONFIGS
-from adb_util import find_quest_devices, install_apk, make_folder, push_folder, check_if_app_installed, install_hl_gold_hd
+from adb_util import find_quest_devices, install_apk, make_folder, push_folder, check_if_app_installed, install_hl_gold_hd, copy_all_files
 
 
 def install_lambda_and_launcher(quest_devices: list[Device], force_install: bool = False):
@@ -49,7 +49,8 @@ def pack_and_copy_hl_gold(quest_devices: list[Device], base_path: Path):
     remote_folder = Path('/sdcard/xash') / 'HL_Gold_HD'
     print(f'Pushing {out_path} to device(s) at {remote_folder}')
     for device in quest_devices:
-        push_folder(device, out_path, remote_folder)
+        # push_folder(device, out_path, remote_folder)
+        copy_all_files(device, out_path, remote_folder)
 
 def pack_and_copy_preset(quest_devices: list[Device], base_path: Path, preset: str = 'hl_hd'):
     # Do the preset, then copy the output to the device(s)
@@ -76,7 +77,8 @@ def pack_and_copy_preset(quest_devices: list[Device], base_path: Path, preset: s
         remote_folder = Path('/sdcard/xash') / preset['base_folder']
         print(f'Pushing {out_path} to device(s) at {remote_folder}')
         for device in quest_devices:
-            push_folder(device, out_path, remote_folder)
+            # push_folder(device, out_path, remote_folder)
+            copy_all_files(device, out_path, remote_folder)
 
 
 def look_for_hl_gold_zip_in_downloads():

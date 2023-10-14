@@ -97,6 +97,34 @@ def push_folder(device: Device, local_folder: str, remote_folder: Path):
     device.push(local_folder, str(remote_folder))
     print(f'Pushed {local_folder} to {remote_folder} on device.')
 
+def copy_all_files(device: Device, src: Path, dest: Path):
+    # Traverse the src directory and copy all files to the dest directory
+    # Check that it starts with /sdcard/
+    if not dest.parts[0] == 'sdcard':
+        # Make it start with /sdcard/
+        dest = Path('/sdcard') / dest
+    
+    # Loop through the files in src
+    for file in src.rglob('*'):
+        # Get the relative path of the file
+        relative_path = file.relative_to(src)
+        
+        # If it's a directory, create it on the device
+        if file.is_dir():
+            # Get the relative path of the file
+            relative_path = file.relative_to(src)
+            # Make the folder on the device's sdcard
+            device.shell(f'mkdir {dest / relative_path}')
+            # device.shell(f'mkdir {dest / file.name}')
+            # device.shell(f'mkdir {dest / file.name}')
+            print(f'Made {dest / relative_path} on device.')
+        # If it's a file, push it
+        elif file.is_file():
+            
+            # Push the file to the device
+            device.push(str(file), str(dest / relative_path))
+            print(f'Pushed {file} to {dest / relative_path} on device.')
+
 def check_if_app_installed(device: Device, package_name: str):
     # Check if the app is installed
     packages = device.shell('pm list packages')
