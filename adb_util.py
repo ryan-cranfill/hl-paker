@@ -172,7 +172,8 @@ def install_hl_gold_hd(base_path: Path, zip_path: Path = None):
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             # There is the HL_Gold_HD folder inside the zip, so extract that to the base path
             # Ignore the How_to_install.txt and commandline.txt files
-            for zip_info in tqdm(zip_ref.infolist()):
+            iterator = tqdm(zip_ref.infolist()) if TQDM_AVAILABLE else zip_ref.infolist()
+            for zip_info in iterator:
                 if zip_info.filename.endswith('.txt'):
                     continue
                 # We need to rewrite the path to remove the "hl gold" folder and make it just start with "HL_Gold_HD"
