@@ -7,6 +7,8 @@ import struct
 from tqdm import tqdm
 from pathlib import Path
 
+from presets import TQDM_AVAILABLE
+
 
 MAX_FILES_PER_PAK = 3900
  
@@ -53,7 +55,7 @@ def dir_to_pak(rootdir, pakfilename):
     pakfile.close()
 
 
-def make_hl_pak(in_path: Path, out_path: Path, also_include_overwrites: list=None, ignore_files: list=None, print_fcn: callable=print, verbose: bool=False, max_chunk_size: int=MAX_FILES_PER_PAK, use_tqdm: bool=True):
+def make_hl_pak(in_path: Path, out_path: Path, also_include_overwrites: list=None, ignore_files: list=None, print_fcn: callable=print, verbose: bool=False, max_chunk_size: int=MAX_FILES_PER_PAK, use_tqdm: bool=TQDM_AVAILABLE):
     # First, make the output directory if it doesn't exist
     out_path = Path(out_path)
     # Delete the output directory if it already exists

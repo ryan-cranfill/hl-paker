@@ -1,8 +1,19 @@
+from tqdm import tqdm
 from pathlib import Path
 
 THIS_FILE = Path(__file__).resolve()
 ROOT_DIR = THIS_FILE.parent
 ADB_ZIP = ROOT_DIR / 'platform-tools.zip'
+
+# Test TQDM to see if it works, if not then disable it
+TQDM_AVAILABLE = True
+try:
+    for i in tqdm(range(10)):
+        pass
+    print('TQDM is available.')
+except:
+    TQDM_AVAILABLE = False
+    print('TQDM is not available.')
 
 
 BASE_DIRS_TO_TRY = [

@@ -25,4 +25,6 @@ python cli.py --preset <preset>
 ```
 python -m PyInstaller gui.py --onefile --noconsole
 python -m PyInstaller wizard_gui.py --onefile --add-data="platform-tools.zip;."
+# For Mac:
+python -m PyInstaller wizard_gui.py --onefile
 ```

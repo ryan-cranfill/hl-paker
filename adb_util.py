@@ -8,7 +8,7 @@ from tempfile import TemporaryDirectory
 from ppadb.client import Client as AdbClient
 from ppadb.device import Device
 
-from presets import APK_CONFIGS, HL_GOLD_HD_URL, ADB_ZIP
+from presets import APK_CONFIGS, HL_GOLD_HD_URL, ADB_ZIP, TQDM_AVAILABLE
 
 
 IS_WINDOWS = os.name == 'nt'
@@ -52,11 +52,17 @@ def download_with_progress(url, dest_path):
     with requests.get(url, stream=True) as r:
         r.raise_for_status()
         with open(dest_path, 'wb') as f:
-            pbar = tqdm(total=int(r.headers['Content-Length']))
-            for chunk in r.iter_content(chunk_size=8192):
-                if chunk:  # filter out keep-alive new chunks
-                    f.write(chunk)
+            if TQDM_AVAILABLE:
+                pbar = tqdm(total=int(r.headers['Content-Length']))
+                for chunk in r.iter_content(chunk_size=8192):
+                    if chunk:  # filter out keep-alive new chunks
+                        f.write(chunk)
                     pbar.update(len(chunk))
+                pbar.close()
+            else:
+                for chunk in r.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
 
 def install_apk(apk_url, device: Device):
     with TemporaryDirectory() as temp_dir:

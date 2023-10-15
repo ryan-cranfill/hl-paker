@@ -2,7 +2,7 @@ from pathlib import Path
 from ppadb.device import Device
 from pak_util import make_hl_pak
 
-from presets import presets, search_for_halflife, APK_CONFIGS
+from presets import presets, search_for_halflife, APK_CONFIGS, TQDM_AVAILABLE
 from adb_util import find_quest_devices, install_apk, make_folder, push_folder, check_if_app_installed, install_hl_gold_hd, copy_all_files
 
 
@@ -45,7 +45,7 @@ def pack_and_copy_hl_gold(quest_devices: list[Device], base_path: Path):
     hl_gold_hd_folder = base_path / 'HL_Gold_HD'
     # Pack the HL_Gold_HD folder and push it to the device(s)
     out_path = base_path / 'xash' / 'HL_Gold_HD'
-    make_hl_pak(hl_gold_hd_folder, out_path, use_tqdm=True)
+    make_hl_pak(hl_gold_hd_folder, out_path, use_tqdm=TQDM_AVAILABLE)
     remote_folder = Path('/sdcard/xash') / 'HL_Gold_HD'
     print(f'Pushing {out_path} to device(s) at {remote_folder}')
     for device in quest_devices:
@@ -64,7 +64,7 @@ def pack_and_copy_preset(quest_devices: list[Device], base_path: Path, preset: s
         out_path = base_path / 'xash' / preset['base_folder']
         ignore_files = [v for v in preset.get('ignore_files', None)] if preset.get('ignore_files', None) else None
         
-        make_hl_pak(game_path, out_path, also_include_overwrites=also_include, ignore_files=ignore_files, use_tqdm=True)
+        make_hl_pak(game_path, out_path, also_include_overwrites=also_include, ignore_files=ignore_files, use_tqdm=TQDM_AVAILABLE)
 
         # Check if the output folder exists
         if not out_path.exists():
