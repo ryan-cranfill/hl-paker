@@ -2,8 +2,9 @@
 Make .pak files for Half-Life 1 for use with Lambda1VR!
 
 ## Wizard usage
-- Install HL (+ Blueshift and Opposing Force if desired) via steam or CD (haven't tested, but if you install to the default directory it should work). 
-- If on Mac, open sidequest and allow your headset to connect to your computer (not necessary for windows)
+- Install HL (+ Blueshift and Opposing Force if desired) via steam or CD (haven't tested, but if you install to the default directory it should work).
+- If using the [AI upscale packs](https://www.moddb.com/mods/half-life-resrced-hd-graphics-mod/downloads/half-life-resrced-v10), extract the STEP 4 and STEP 5 folders into the base Half-Life directory (it should be at the same level as the `valve/` folder)
+- Open sidequest and allow your headset to connect to your computer (not necessary for windows)
 - Run the wizard .exe, basically you click the buttons in order from top to bottom. IMPORTANT: WAIT for the popup telling you each step is complete before going on to the next one! It may not seem like it's doing anything but it probably is.
 - **Reboot your headset!** Sometimes it gets a little funky for some reason but a reboot seems to work.
 - Run the different games with the Cactus' launcher.
