@@ -8,6 +8,7 @@ from tqdm import tqdm
 from pathlib import Path
 
 from presets import TQDM_AVAILABLE
+from adb_util import rewrite_path_for_os
 
 
 MAX_FILES_PER_PAK = 3900
@@ -57,7 +58,7 @@ def dir_to_pak(rootdir, pakfilename):
 
 def make_hl_pak(in_path: Path, out_path: Path, also_include_overwrites: list=None, ignore_files: list=None, print_fcn: callable=print, verbose: bool=False, max_chunk_size: int=MAX_FILES_PER_PAK, use_tqdm: bool=TQDM_AVAILABLE):
     # First, make the output directory if it doesn't exist
-    out_path = Path(out_path)
+    out_path = rewrite_path_for_os(Path(out_path))
     # Delete the output directory if it already exists
     if out_path.exists():
         shutil.rmtree(out_path)
@@ -94,7 +95,7 @@ def make_hl_pak(in_path: Path, out_path: Path, also_include_overwrites: list=Non
     # Copy all of the files from the overwrites to the output directory, preserving directory structure
     if also_include_overwrites:
         for path in also_include_overwrites:
-            new_dir = Path(path)
+            new_dir = rewrite_path_for_os(Path(path))
             if not new_dir.exists():
                 print_fcn(f'Error: {new_dir} does not exist, skipping.')
                 continue

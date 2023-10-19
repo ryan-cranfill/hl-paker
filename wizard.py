@@ -3,7 +3,7 @@ from ppadb.device import Device
 from pak_util import make_hl_pak
 
 from presets import presets, search_for_halflife, APK_CONFIGS, TQDM_AVAILABLE
-from adb_util import find_quest_devices, install_apk, make_folder, push_folder, check_if_app_installed, install_hl_gold_hd, copy_all_files
+from adb_util import find_quest_devices, install_apk, make_folder, push_folder, check_if_app_installed, install_hl_gold_hd, copy_all_files, rewrite_path_for_os
 
 
 def install_lambda_and_launcher(quest_devices: list[Device], force_install: bool = False):

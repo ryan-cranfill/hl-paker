@@ -13,6 +13,12 @@ from presets import APK_CONFIGS, HL_GOLD_HD_URL, ADB_ZIP, TQDM_AVAILABLE
 
 IS_WINDOWS = os.name == 'nt'
 
+def rewrite_path_for_os(path: Path) -> Path:
+    if IS_WINDOWS:
+        return Path(str(path).replace('/', '\\'))
+
+    return Path(str(path).replace('\\', '/'))
+
 def find_quest_devices():
     client = AdbClient()
     devices: list[Device] = client.devices()

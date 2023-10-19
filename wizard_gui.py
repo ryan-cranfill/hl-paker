@@ -1,9 +1,34 @@
 import PySimpleGUI as sg
 from pathlib import Path
 
-from presets import search_for_halflife
-from adb_util import find_quest_devices
+from presets import search_for_halflife, presets
+from adb_util import find_quest_devices, rewrite_path_for_os
 from wizard import install_lambda_and_launcher, pack_and_copy_hl_gold, pack_and_copy_preset, download_and_install_hl_gold, look_for_hl_gold_zip_in_downloads
+
+
+def do_a_preset(preset_name: str):
+    # Look for quest devices
+    quest_devices = find_quest_devices()
+
+    if not quest_devices:
+        sg.popup('Please find Quest devices first.')
+    else:
+        base_path = Path(search_for_halflife())
+        preset = presets[preset_name]
+        game_path = base_path / preset['base_folder']
+        if not rewrite_path_for_os(game_path).exists():
+            sg.popup(f'Error: Game path {game_path} does not exist.')
+            return
+        
+        if preset['also_include_overwrites']:
+            for new_folder in preset['also_include_overwrites']:
+                if not rewrite_path_for_os(base_path / new_folder).exists():
+                    sg.popup(f'Error: {base_path / new_folder} does not exist.')
+                    return
+        
+        # Pack and copy the preset
+        pack_and_copy_preset(quest_devices, base_path=base_path, preset=preset_name)
+        sg.popup(f'{preset_name} copied successfully.')
 
 
 def main():
@@ -16,6 +41,9 @@ def main():
         [sg.Button('Pack and Copy HL Gold HD')],
         [sg.Button('Pack and Copy Blueshift')],
         [sg.Button('Pack and Copy Opposing Force')],
+        [sg.Button('Pack and Copy HL AI Upscale')],
+        [sg.Button('Pack and Copy Blueshift AI Upscale')],
+        [sg.Button('Pack and Copy Opposing Force AI Upscale')],
         [sg.Button('Exit')]
     ]
 
@@ -46,31 +74,11 @@ def main():
                 if not sg.popup_yes_no('Are you sure you want to install Lambda and Launcher? This will overwrite any existing installations.'):
                     continue
 
-                # Show a please wait screen
-                # sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
-
                 install_lambda_and_launcher(quest_devices, force_install=True)
-
-                # Delete the please wait screen
-                # sg.popup_animated(None)
                 sg.popup('Lambda and Launcher installed successfully.')
 
         if event == 'Pack and Copy Base Half-Life':
-            if not quest_devices:
-                sg.popup('Please find Quest devices first.')
-            else:
-                base_path = Path(search_for_halflife())
-                if not base_path.exists():
-                    sg.popup(f'Error: Half-Life cannot be found, please ensure it is installed.')
-                    continue
-                # Show a please wait screen
-                # sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
-                # Pack and copy the base Half-Life
-                pack_and_copy_preset(quest_devices, base_path=base_path, preset='hl_hd')
-                # Delete the please wait screen
-                # sg.popup_animated(None)
-
-                sg.popup('Base Half-Life packed and copied successfully.')
+            do_a_preset('hl_hd')
 
         if event == 'Download and Install HL Gold HD':
             if not quest_devices:
@@ -78,12 +86,8 @@ def main():
             else:
                 base_path = Path(search_for_halflife())
                 zip_file = look_for_hl_gold_zip_in_downloads()
-                # Show a please wait screen
-                # sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
+                
                 download_and_install_hl_gold(base_path, zip_file, force_install=True)
-
-                # Delete the please wait screen
-                # sg.popup_animated(None)
                 sg.popup('HL Gold downloaded and installed successfully.')
 
         if event == 'Pack and Copy HL Gold HD':
@@ -94,41 +98,24 @@ def main():
                 if not base_path / 'HL_Gold_HD':
                     sg.popup('HL Gold HD not found.')
                 else:
-                    # Show a please wait screen
-                    # sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)    
                     pack_and_copy_hl_gold(quest_devices, base_path=base_path)
-                    # Delete the please wait screen
-                    # sg.popup_animated(None)
                     sg.popup('HL Gold packed and copied successfully.')
 
         if event == 'Pack and Copy Blueshift':
-            if not quest_devices:
-                sg.popup('Please find Quest devices first.')
-            else:
-                base_path = Path(search_for_halflife())
-                if base_path / 'bshift':
-                    # Show a please wait screen
-                    # sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
-                    pack_and_copy_preset(quest_devices, base_path=base_path, preset='blueshift_hd')
-                    # Delete the please wait screen
-                    # sg.popup_animated(None)
-                    sg.popup('Blueshift copied successfully.')
-                else:
-                    sg.popup('Blueshift not found.')
+            do_a_preset('blueshift_hd')
 
         if event == 'Pack and Copy Opposing Force':
-            if not quest_devices:
-                sg.popup('Please find Quest devices first.')
-            else:
-                base_path = Path(search_for_halflife())
-                if base_path / 'gearbox':
-                    # Show a please wait screen
-                    # sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
-                    pack_and_copy_preset(quest_devices, base_path=base_path, preset='opfor_hd')
-                    # Delete the please wait screen
-                    sg.popup('Opposing Force copied successfully.')
-                else:
-                    sg.popup('Opposing Force not found.')
+            do_a_preset('opfor_hd')
+        
+        if event == 'Pack and Copy HL AI Upscale':
+            do_a_preset('hl_ai_upscale')
+        
+        if event == 'Pack and Copy Blueshift AI Upscale':
+            do_a_preset('blueshift_ai_upscale')
+
+        if event == 'Pack and Copy Opposing Force AI Upscale':
+            do_a_preset('opfor_ai_upscale')
+
 
     # Close the GUI window
     window.close()
