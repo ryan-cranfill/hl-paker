@@ -1,6 +1,9 @@
 # HL-Paker
 Make .pak files for Half-Life 1 for use with Lambda1VR!
 
+## IMPORTANT NOTICE!
+The HL 25th anniversary update has currently broken compatibility with Lambda1VR (as of 04/04/25). You'll need to downgrade your version of HL; [here is a video guide to doing so by Team Beef.](https://www.youtube.com/watch?v=DgAIruHRqTE)
+
 ## Wizard usage
 - Install HL (+ Blueshift and Opposing Force if desired) via steam or CD (haven't tested, but if you install to the default directory it should work).
 - If using the [AI upscale packs](https://www.moddb.com/mods/half-life-resrced-hd-graphics-mod/downloads/half-life-resrced-v10), extract the STEP 4 and STEP 5 folders into the base Half-Life directory (it should be at the same level as the `valve/` folder). **If you use these, you don't have to install the base HL/Opfor/BShift, as the AI upscale presets will do it for you.**
